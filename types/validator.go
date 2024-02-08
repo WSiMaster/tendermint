@@ -21,6 +21,10 @@ type Validator struct {
 	VotingPower int64         `json:"voting_power"`
 
 	ProposerPriority int64 `json:"proposer_priority"`
+
+	// 贡献值&创作能力
+	Contribution int64 `json:"contriution"`
+	Creativity   int64 `json:"creativity"`
 }
 
 // NewValidator returns a new validator with the given pubkey and voting power.
@@ -66,9 +70,9 @@ func (v *Validator) CompareProposerPriority(other *Validator) *Validator {
 		return other
 	}
 	switch {
-	case v.ProposerPriority > other.ProposerPriority:
+	case v.Contribution > other.Contribution:
 		return v
-	case v.ProposerPriority < other.ProposerPriority:
+	case v.Contribution < other.Contribution:
 		return other
 	default:
 		result := bytes.Compare(v.Address, other.Address)

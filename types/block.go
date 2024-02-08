@@ -47,6 +47,8 @@ type Block struct {
 	Data       `json:"data"`
 	Evidence   EvidenceData `json:"evidence"`
 	LastCommit *Commit      `json:"last_commit"`
+
+	ValContributions map[string]int64 `json:"val_contributions"`
 }
 
 // ValidateBasic performs basic validation that doesn't involve state data.

@@ -9,6 +9,7 @@ import (
 	"runtime/debug"
 	"sort"
 	"time"
+	"math/rand"
 
 	"github.com/gogo/protobuf/proto"
 
@@ -1216,7 +1217,30 @@ func (cs *State) createProposalBlock() (block *types.Block, blockParts *types.Pa
 
 	proposerAddr := cs.privValidatorPubKey.Address()
 
-	return cs.blockExec.CreateProposalBlock(cs.Height, cs.state, commit, proposerAddr)
+	// 计算下一轮贡献值
+	res := cs.calContributions()
+	if _,ok := res[proposerAddr.String()];ok{
+		res[proposerAddr.String()] = 0
+	}else{
+		cs.Logger.Error("so fucking bad, no proposor??????")
+	}
+	return cs.blockExec.CreateProposalBlock(cs.Height, cs.state, commit, proposerAddr,res)
+
+}
+
+func (cs *State) calContributions() (map[string]int64){
+	newValidatorsContribution := make(map[string]int64,len(cs.Validators.Validators))
+	rand.Seed(time.Now().UTC().UnixNano())
+	for _,val := range cs.Validators.Validators{
+		num := rand.Intn(101)
+		creativity := val.Creativity
+		if num<= int(creativity){
+			addr := val.Address.String()
+			newValidatorsContribution[addr] += (creativity-int64(num))
+		}
+	}
+
+	return newValidatorsContribution
 }
 
 // Enter: `timeoutPropose` after entering Propose.

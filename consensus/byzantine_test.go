@@ -221,7 +221,7 @@ func TestByzantinePrevoteEquivocation(t *testing.T) {
 		proposerAddr := lazyProposer.privValidatorPubKey.Address()
 
 		block, blockParts := lazyProposer.blockExec.CreateProposalBlock(
-			lazyProposer.Height, lazyProposer.state, commit, proposerAddr,
+			lazyProposer.Height, lazyProposer.state, commit, proposerAddr,nil,
 		)
 
 		// Flush the WAL. Otherwise, we may not recompute the same proposal to sign,
